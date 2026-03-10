@@ -130,3 +130,66 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
+    
+    // Dashboard Page
+    const createRequestForm = document.getElementById('createRequestForm');
+    if (createRequestForm) {
+        loadUserRequests();
+
+        createRequestForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const btn = document.getElementById('createBtn');
+            btn.textContent = 'Submitting...';
+            btn.disabled = true;
+
+            const dataObj = Object.fromEntries(formData.entries());
+
+            fetch('php/create_request.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataObj)
+            })
+                .then(res => res.text())
+                .then(data => {
+                    if (data.startsWith('Success:')) {
+                        showToast(data.substring(8).trim(), 'success');
+                        document.getElementById('createRequestForm').reset();
+                        loadUserRequests();
+                    } else {
+                        showToast(data, 'error');
+                    }
+                    btn.textContent = 'Submit Request';
+                    btn.disabled = false;
+                })
+                .catch(() => {
+                    showToast('Something went wrong.', 'error');
+                    btn.textContent = 'Submit Request';
+                    btn.disabled = false;
+                });
+        });
+        
+        document.getElementById('editRequestForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            const dataObj = Object.fromEntries(formData.entries());
+
+            fetch('php/update_request.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataObj)
+            })
+                .then(res => res.text())
+                .then(data => {
+                    if (data.startsWith('Success:')) {
+                        showToast(data.substring(8).trim(), 'success');
+                        closeModal('editModal');
+                        loadUserRequests();
+                    } else {
+                        showToast(data, 'error');
+                    }
+                })
+                .catch(() => showToast('Something went wrong.', 'error'));
+        });
+    }
