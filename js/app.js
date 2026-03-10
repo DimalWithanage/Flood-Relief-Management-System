@@ -193,3 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(() => showToast('Something went wrong.', 'error'));
         });
     }
+
+    // Admin Dashboard Page
+    if (document.getElementById('usersTableBody')) {
+        loadUsers();
+        loadReports();
+    }
+});
