@@ -295,3 +295,158 @@ function switchTab(tab) {
     }
     if (tab === 'requests') loadUserRequests();
 }
+
+// Global Functions from Admin
+
+function loadUsers() {
+    fetch('php/get_users.php')
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.getElementById('usersTableBody');
+            if (!data.success || !data.data || data.data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">👥</div><p>No registered users found.</p></div></td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.data.map((u, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${escapeHtml(u.full_name)}</td>
+                    <td>${escapeHtml(u.email)}</td>
+                    <td>${escapeHtml(u.phone)}</td>
+                    <td>${new Date(u.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <a href="php/view_user_report.php?id=${u.id}" class="btn btn-sm btn-outline">View Report</a>
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        })
+        .catch(() => {
+            const tbody = document.getElementById('usersTableBody');
+            if (tbody) tbody.innerHTML = '<tr><td colspan="6" class="text-center">Failed to load users.</td></tr>';
+        });
+}
+
+function deleteUser(id) {
+    document.getElementById('deleteUserId').value = id;
+    openModal('deleteUserModal');
+}
+
+function confirmDeleteUser() {
+    const id = document.getElementById('deleteUserId').value;
+
+    fetch('php/delete_user.php', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id })
+    })
+        .then(res => res.text())
+        .then(data => {
+            if (data.startsWith('Success:')) {
+                showToast(data.substring(8).trim(), 'success');
+                closeModal('deleteUserModal');
+                loadUsers();
+            } else {
+                showToast(data, 'error');
+            }
+        })
+        .catch(() => showToast('Something went wrong.', 'error'));
+}
+
+function loadReports() {
+    const filterArea = document.getElementById('filterArea');
+    const filterReliefType = document.getElementById('filterReliefType');
+
+    if (!filterArea || !filterReliefType) return;
+
+    const area = filterArea.value.trim();
+    const reliefType = filterReliefType.value;
+
+    let url = 'php/get_reports.php?';
+    if (area) url += 'area=' + encodeURIComponent(area) + '&';
+    if (reliefType) url += 'relief_type=' + encodeURIComponent(reliefType);
+
+    const btn = document.getElementById('filterBtn');
+    if (btn) {
+        btn.textContent = 'Loading...';
+        btn.disabled = true;
+    }
+
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            if (btn) {
+                btn.textContent = 'Apply Filter';
+                btn.disabled = false;
+            }
+
+            if (!data.success) {
+                showToast(data.message, 'error');
+                return;
+            }
+
+            const report = data.data;
+            const grid = document.getElementById('summaryGrid');
+            if (!grid) return;
+
+            grid.innerHTML = `
+                <div class="summary-item">
+                    <div class="label">Total Registered Users</div>
+                    <div class="value">${report['Total Registered Users']}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Total Relief Requests</div>
+                    <div class="value">${report['Total Relief Requests']}</div>
+                </div>
+                <div class="summary-item danger">
+                    <div class="label">High Severity Households</div>
+                    <div class="value">${report['High Severity Households']}</div>
+                </div>
+                <div class="summary-item warning">
+                    <div class="label">Medium Severity Households</div>
+                    <div class="value">${report['Medium Severity Households']}</div>
+                </div>
+                <div class="summary-item success">
+                    <div class="label">Low Severity Households</div>
+                    <div class="value">${report['Low Severity Households']}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Food Requests</div>
+                    <div class="value">${report['Food Requests']}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Water Requests</div>
+                    <div class="value">${report['Water Requests']}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Medicine Requests</div>
+                    <div class="value">${report['Medicine Requests']}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Shelter Requests</div>
+                    <div class="value">${report['Shelter Requests']}</div>
+                </div>
+            `;
+        })
+        .catch(() => {
+            if (btn) {
+                btn.textContent = 'Apply Filter';
+                btn.disabled = false;
+            }
+            showToast('Failed to load reports.', 'error');
+        });
+}
+
+function switchAdminTab(tab, e) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+
+    let _e = e || event;
+    if (_e && _e.target) {
+        _e.target.classList.add('active');
+    }
+
+    if (tab === 'users') loadUsers();
+    if (tab === 'reports') loadReports();
+}
