@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Dashboard - Manage users, view reports, and monitor flood relief data.">
+    <title>Admin Dashboard - Flood Relief Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <nav class="navbar">
+        <div class="brand">Flood Relief System <span
+                style="font-size: 0.75rem; opacity: 0.7; margin-left: 4px;">ADMIN</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="active" onclick="switchAdminTab('users', event)">Users</a></li>
+            <li><a href="#" onclick="switchAdminTab('reports', event)">Reports</a></li>
+            <li><a href="php/logout.php">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-content">
+
+        <div class="tab-content active" id="tab-users">
+            <div class="page-header">
+                <h2>Registered Users</h2>
+                <p>View all registered users. Click "View Report" to see a detailed report for each user.</p>
+            </div>
+
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Registered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="6" class="text-center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-reports">
+            <div class="page-header">
+                <h2>System Summary &amp; Filtered Reports</h2>
+                <p>Filter and view summarized system data based on Area and Type of relief request.</p>
+            </div>
+
+            <div class="card">
+                <h3>Filter Options</h3>
+                <div class="filters">
+                    <div class="form-group">
+                        <label for="filterArea">Area</label>
+                        <input type="text" id="filterArea"
+                            placeholder="Search by District, Div. Secretariat, or GN Division">
+                    </div>
+                    <div class="form-group">
+                        <label for="filterReliefType">Type of Relief Request</label>
+                        <select id="filterReliefType">
+                            <option value="">All Types</option>
+                            <option value="Food">Food</option>
+                            <option value="Water">Water</option>
+                            <option value="Medicine">Medicine</option>
+                            <option value="Shelter">Shelter</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="loadReports()" id="filterBtn">Apply Filter</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Summary Report</h3>
+                <div class="summary-grid" id="summaryGrid">
+                    <div class="summary-item">
+                        <div class="label">Loading...</div>
+                        <div class="value">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="deleteUserModal">
+        <div class="modal">
+            <div class="confirm-dialog">
+                <div class="icon">⚠️</div>
+                <h3>Delete User</h3>
+                <p>Are you sure you want to delete this user? All their relief requests will also be deleted. This
+                    action cannot be undone.</p>
+                <input type="hidden" id="deleteUserId">
+                <div class="modal-actions" style="justify-content: center;">
+                    <button class="btn btn-outline" onclick="closeModal('deleteUserModal')">Cancel</button>
+                    <button class="btn btn-danger" onclick="confirmDeleteUser()">Delete User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
