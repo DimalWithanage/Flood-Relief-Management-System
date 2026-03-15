@@ -1,27 +1,27 @@
- @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 
 :root {
-    --primary: #0e7490;
-    --primary-light: #22d3ee;
-    --primary-dark: #064e63;
-    --secondary: #0f766e;
-    --accent: #06b6d4;
-    --bg: #f0f9ff;
+    --primary: #0d9488;
+    --primary-light: #ccfbf1;
+    --primary-dark: #0f766e;
+    --secondary: #14b8a6;
+    --accent: #1e293b;
+    --bg: #f8fafc;
     --bg-card: #ffffff;
-    --bg-dark: #0c4a6e;
+    --bg-dark: #1e293b;
     --text: #0f172a;
-    --text-light: #64748b;
-    --text-white: #f8fafc;
+    --text-light: #475569;
+    --text-white: #ffffff;
     --border: #e2e8f0;
-    --success: #059669;
-    --success-bg: #d1fae5;
+    --success: #0d9488;
+    --success-bg: #ccfbf1;
     --danger: #dc2626;
     --danger-bg: #fee2e2;
     --warning: #d97706;
     --warning-bg: #fef3c7;
-    --info: #2563eb;
-    --info-bg: #dbeafe;
+    --info: #0284c7;
+    --info-bg: #e0f2fe;
     --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -159,7 +159,7 @@ a:hover {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--primary) 50%, var(--secondary) 100%);
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--primary) 100%);
     padding: 20px;
 }
 
@@ -238,7 +238,7 @@ a:hover {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.15);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
 }
 
 .form-group textarea {
@@ -272,12 +272,12 @@ a:hover {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    background: var(--primary);
     color: #fff;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--primary-dark), var(--bg-dark));
+    background: var(--primary-dark);
     color: #fff;
 }
 
@@ -317,7 +317,7 @@ a:hover {
 }
 
 .navbar {
-    background: linear-gradient(135deg, var(--bg-dark), var(--primary-dark));
+    background: var(--bg-dark);
     padding: 0 24px;
     display: flex;
     align-items: center;
@@ -362,6 +362,16 @@ a:hover {
 .navbar .nav-links a.active {
     color: #fff;
     background: rgba(255, 255, 255, 0.12);
+}
+
+.navbar .nav-links a[href*="logout"] {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 600;
+}
+
+.navbar .nav-links a[href*="logout"]:hover {
+    background: var(--primary-dark);
 }
 
 .navbar .nav-user {
@@ -426,8 +436,8 @@ table {
 }
 
 table th {
-    background: var(--bg-dark);
-    color: var(--text-white);
+    background: var(--primary-light);
+    color: var(--text);
     padding: 14px 16px;
     text-align: left;
     font-weight: 600;
@@ -447,11 +457,16 @@ table tbody tr {
 }
 
 table tbody tr:hover {
-    background: #f0f9ff;
+    background: var(--bg);
 }
 
 table tbody tr:last-child td {
     border-bottom: none;
+}
+
+table tbody tr:nth-child(odd) {
+    background: var(--bg-dark);
+    color: var(--text-white);
 }
 
 .badge {
@@ -534,11 +549,11 @@ table tbody tr:last-child td {
 
 .tab-btn:hover {
     color: var(--primary);
-    background: rgba(14, 116, 144, 0.06);
+    background: rgba(13, 148, 136, 0.06);
 }
 
 .tab-btn.active {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    background: var(--bg-dark);
     color: #fff;
     box-shadow: var(--shadow);
 }
@@ -653,10 +668,11 @@ table tbody tr:last-child td {
 }
 
 .summary-item {
-    background: linear-gradient(135deg, var(--bg) 0%, #e0f2fe 100%);
+    background: var(--bg-card);
     border-radius: var(--radius-sm);
     padding: 20px;
     border-left: 4px solid var(--primary);
+    box-shadow: var(--shadow);
     transition: var(--transition);
 }
 
@@ -668,7 +684,7 @@ table tbody tr:last-child td {
 .summary-item .label {
     font-size: 0.85rem;
     font-weight: 500;
-    color: var(--text-light);
+    color: var(--primary);
     margin-bottom: 4px;
 }
 
@@ -682,7 +698,7 @@ table tbody tr:last-child td {
     border-left-color: var(--danger);
 }
 
-.summary-item.danger .value {
+.summary-item.danger .value, .summary-item.danger .label {
     color: var(--danger);
 }
 
@@ -690,8 +706,16 @@ table tbody tr:last-child td {
     border-left-color: var(--warning);
 }
 
+.summary-item.warning .value, .summary-item.warning .label {
+    color: var(--warning);
+}
+
 .summary-item.success {
     border-left-color: var(--success);
+}
+
+.summary-item.success .value, .summary-item.success .label {
+    color: var(--success);
 }
 
 .report-page {
@@ -701,7 +725,7 @@ table tbody tr:last-child td {
 }
 
 .report-header {
-    background: linear-gradient(135deg, var(--bg-dark), var(--primary-dark));
+    background: var(--bg-dark);
     color: var(--text-white);
     padding: 32px;
     border-radius: var(--radius) var(--radius) 0 0;
